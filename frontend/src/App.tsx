@@ -1,0 +1,72 @@
+import React, { useEffect, useRef, useState } from 'react';
+import logo from './logo.svg';
+import McpForm from './components/McpForm';
+import FormComponent from './components/Form';
+import { getFormConfig } from './tools/formTools';
+import { callComponentTool, registerComponent } from './utils/ComponentRegistry';
+import { Button, Input } from 'antd';
+function App() {
+  const formRef=useRef(null)
+  const [text,setText]=useState("")
+
+  useEffect(()=>{
+    const tools=getFormConfig();
+    registerComponent(tools,formRef.current);
+  },[])
+
+  async function handleSubmit(){
+    const response=await fetch("http://localhost:8000/api/execute",{
+      method:"POST",
+      headers:{
+        'Content-Type': 'application/json',
+      },
+      body:JSON.stringify({
+        user_input:text
+      })
+    })
+    if(!response.ok){
+      const err=await response.json()
+      console.log(err)
+    }
+    else{
+      const responseData=await response.json()
+      
+      const results = [];
+      for (const action of responseData.actions) {
+        try {
+          const result = await callComponentTool(
+            action.component,
+            action.tool,
+            action.parameters
+          );
+          results.push({
+            component: action.component,
+            tool: action.tool,
+            status: 'success',
+            result
+          });
+        } catch (error:any) {
+          results.push({
+            component: action.component,
+            tool: action.tool,
+            status: 'error',
+            error: error.message
+          });
+        }
+      }
+
+      console.log(results)
+    }
+  }
+
+  return (
+    <div className="App">
+      <McpForm/>
+      <FormComponent ref={formRef}/>
+      <Input value={text} onChange={(e)=>{setText(e.target.value)}}></Input>
+      <Button onClick={handleSubmit}>提交</Button>
+    </div>
+  );
+}
+
+export default App;
