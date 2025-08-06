@@ -14,8 +14,8 @@ const FormComponent = forwardRef((props, ref) => {
     }
   }))
 
-  const onFinish = (values: any) => {
-    console.log('表单提交成功：', values)
+  const onFinish = () => {
+    alert('表单提交成功：')
   }
 
   return (

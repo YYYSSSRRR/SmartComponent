@@ -4,14 +4,19 @@ import McpForm from './components/McpForm';
 import FormComponent from './components/Form';
 import { getFormConfig } from './tools/formTools';
 import { callComponentTool, registerComponent } from './utils/ComponentRegistry';
-import { Button, Input } from 'antd';
+import { Button, Input, Select } from 'antd';
+import SelectComponent from './components/Select';
+import { getSelectConfig } from './tools/selectTool';
 function App() {
-  const formRef=useRef(null)
+  const formRef=useRef(null);
+  const selectRef=useRef(null);
   const [text,setText]=useState("")
 
   useEffect(()=>{
-    const tools=getFormConfig();
-    registerComponent(tools,formRef.current);
+    const Formtools=getFormConfig();
+    registerComponent(Formtools,formRef.current);
+    const SelectTools=getSelectConfig();
+    registerComponent(SelectTools,selectRef.current);
   },[])
 
   async function handleSubmit(){
@@ -61,8 +66,8 @@ function App() {
 
   return (
     <div className="App">
-      <McpForm/>
       <FormComponent ref={formRef}/>
+      <SelectComponent ref={selectRef}/>
       <Input value={text} onChange={(e)=>{setText(e.target.value)}}></Input>
       <Button onClick={handleSubmit}>提交</Button>
     </div>

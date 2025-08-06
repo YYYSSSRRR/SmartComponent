@@ -111,7 +111,7 @@ registry = ComponentRegistry2()
 def register_component(component: ComponentRegistration):
     # 将组件信息添加到注册表
     registry.register_component(component)
-    # print("后端注册的组件：register",registry.get_all_components())
+    print("后端注册的组件：register",registry.get_all_components())
     return {"status":"success"}
 
 @app.post("/api/execute")
