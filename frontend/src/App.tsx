@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import logo from './logo.svg';
-import McpForm from './components/McpForm';
 import FormComponent from './components/Form';
 import { getFormConfig } from './tools/formTools';
 import { callComponentTool, registerComponent } from './utils/ComponentRegistry';
